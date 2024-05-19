@@ -1,10 +1,13 @@
 from django.shortcuts import render
 # Импортируем класс, который говорит нам о том,
 # что в этом представлении мы будем выводить список объектов из БД
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from .models import Product
 from datetime import datetime
 from .filters import ProductFilter
+from .forms import ProductForm
+from django.http import HttpResponseRedirect
+from .models import Product
 
 
 class ProductsList(ListView):
@@ -53,6 +56,26 @@ class ProductsList(ListView):
         return context
 
 class ProductDetail(DetailView):
+
     model = Product
     template_name = 'product.html'
     context_object_name = 'product'
+
+# def create_product(request):
+#     form = ProductForm(request.POST)
+#     if form.is_valid():
+#         form.save()
+#         return HttpResponseRedirect('/products/')
+    
+#     return render(request, 'product_edit.html', {'form': form})
+
+# Добавляем новое представление для создания товаров, используя generic.
+class ProductCreate(CreateView):
+    # Указываем нашу разработанную форму
+    form_class = ProductForm
+    # модель товаров
+    model = Product
+    # и новый шаблон, в котором используется форма.
+    template_name = 'product_edit.html'
+
+    
