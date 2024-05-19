@@ -1,6 +1,6 @@
 from django.urls import path
 # Импортируем созданное нами представление
-from .views import ProductsList, ProductDetail
+from .views import ProductsList, ProductDetail, ProductUpdate, ProductDelete
 # from .views import create_product 
 # alternative to create_product 
 from .views import ProductCreate
@@ -13,11 +13,13 @@ urlpatterns = [
    # Т.к. наше объявленное представление является классом,
    # а Django ожидает функцию, нам надо представить этот класс в виде view.
    # Для этого вызываем метод as_view.
-   path('', ProductsList.as_view()), 
+   path('', ProductsList.as_view(), name='product_list'), 
    # pk — это первичный ключ товара, который будет выводиться у нас в шаблон
    # int — указывает на то, что принимаются только целочисленные значения
-   path('<int:pk>', ProductDetail.as_view()),
+   path('<int:pk>', ProductDetail.as_view(), name='product_detail'),
    # path('create/', create_product, name='product_create')
    # alternative method
    path('create/', ProductCreate.as_view(), name='product_create'),
+   path('<int:pk>/update/', ProductUpdate.as_view(), name='product_update'),
+   path('<int:pk>/delete/', ProductDelete.as_view(), name='product_delete'),
 ]

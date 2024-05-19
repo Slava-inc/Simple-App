@@ -1,13 +1,14 @@
 from django.shortcuts import render
 # Импортируем класс, который говорит нам о том,
 # что в этом представлении мы будем выводить список объектов из БД
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Product
 from datetime import datetime
 from .filters import ProductFilter
 from .forms import ProductForm
 from django.http import HttpResponseRedirect
 from .models import Product
+from django.urls import reverse_lazy
 
 
 class ProductsList(ListView):
@@ -21,7 +22,7 @@ class ProductsList(ListView):
     # Это имя списка, в котором будут лежать все объекты.
     # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'products'
-    paginate_by = 2  # вот так мы можем указать количество записей на странице
+    paginate_by = 3  # вот так мы можем указать количество записей на странице
 
    # Переопределяем функцию получения списка товаров
     def get_queryset(self):
@@ -77,5 +78,18 @@ class ProductCreate(CreateView):
     model = Product
     # и новый шаблон, в котором используется форма.
     template_name = 'product_edit.html'
+
+# Добавляем представление для изменения товара.
+class ProductUpdate(UpdateView):
+    form_class = ProductForm
+    model = Product
+    template_name = 'product_edit.html'
+
+# Представление удаляющее товар.
+class ProductDelete(DeleteView):
+    model = Product
+    template_name = 'product_delete.html'
+    success_url = reverse_lazy('product_list')
+
 
     
